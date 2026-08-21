@@ -1,0 +1,9 @@
+{
+  "name": "hermes-superpowers-workflow",
+  "version": "0.1.0",
+  "description": "Hermes-native software workflow discipline adapted from Superpowers.",
+  "skills": [
+    "skills/superpowers-workflow",
+    "skills/subagent-driven-development"
+  ]
+}
