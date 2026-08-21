@@ -23,6 +23,8 @@ def test_router_has_risk_sensitive_profiles():
     assert ".hermes/plans/" in body
     assert "docs/specs/" in body
     assert ".hermes/workflows/<plan-id>/progress.md" in body
+    assert "references/risk-classification.md" in body
+    assert (SKILLS / "superpowers-workflow" / "references" / "risk-classification.md").is_file()
 
 
 def test_subagent_loop_is_bounded_and_integrated():

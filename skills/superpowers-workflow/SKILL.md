@@ -32,7 +32,7 @@ Do not repeatedly ask the user to reaffirm an explicit override.
 
 ## Classify before acting
 
-Choose the lightest accurate profile. Hidden complexity upgrades the profile; user direction may choose a lighter workflow when policy permits.
+Use the [risk classification reference](references/risk-classification.md) to record mutation, privilege, reversibility, blast radius, recovery dependence, and visibility. Choose the lightest accurate profile. Hidden complexity upgrades the profile; user direction may choose a lighter workflow when policy permits.
 
 ### Read-only inquiry
 
