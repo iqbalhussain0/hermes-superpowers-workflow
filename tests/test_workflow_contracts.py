@@ -32,6 +32,8 @@ def test_subagent_loop_is_bounded_and_integrated():
     assert "Inspect the worker's claimed files and diff independently" in body
     assert "Integrated review" in body
     assert "reconcile the ledger against Git, files, and live runtime state" in body
+    assert "references/execution-ledger.md" in body
+    assert (SKILLS / "subagent-driven-development" / "references" / "execution-ledger.md").is_file()
 
 
 def test_verification_refuses_unsupported_completion_claims():

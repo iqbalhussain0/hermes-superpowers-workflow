@@ -95,7 +95,7 @@ Per-task approval is not sufficient for a whole-change completion claim.
 
 ## Progress and recovery
 
-For multi-task work, maintain a plan-specific ledger containing:
+For multi-task work, maintain a plan-specific ledger using the [execution ledger specification](references/execution-ledger.md) at the project path `.hermes/workflows/<plan-id>/progress.md` containing:
 
 - Plan or specification identity
 - Current task
