@@ -1,6 +1,6 @@
 # Hermes Superpowers Workflow
 
-Hermes-native workflow discipline adapted from Superpowers without installing the upstream plugin alongside Hermes skills.
+Hermes-native workflow discipline adapted from Superpowers without installing the upstream plugin alongside Hermes skills. This repository is distributed as a Hermes skill tap because it contains skills and no Python plugin runtime.
 
 ## Included skills
 
@@ -14,24 +14,22 @@ Hermes-native workflow discipline adapted from Superpowers without installing th
 
 The package preserves Hermes' higher-priority safety, authorization, credential, operational, and recovery rules. It makes strong recommendations, but explicit current user directions override ordinary workflow ceremony.
 
-## Portable installation
+## Installation from a GitHub skill tap
 
-From a GitHub repository:
+After the repository is created on GitHub:
 
 ```bash
-hermes plugins install OWNER/hermes-superpowers-workflow --no-enable
-hermes plugins list
-hermes plugins enable hermes-superpowers-workflow
+hermes skills tap add OWNER/hermes-superpowers-workflow
+hermes skills install OWNER/hermes-superpowers-workflow/skills/superpowers-workflow
 ```
 
-The plugin is opt-in. Enabling it grants the package's instructions the same trusted posture as other installed skills; review the repository before installation.
+Install the other workflow skills from the same tap when needed. Review the repository before installation; installed skills have the same trusted instruction posture as other Hermes skills.
 
 ## Local development
 
-Portable packages use this layout:
+Skill taps use this layout:
 
 ```text
-plugin.json
 skills/<skill-name>/SKILL.md
 ```
 
@@ -46,11 +44,11 @@ After installation, start a fresh Hermes session so the skill index reloads.
 ## Removal and rollback
 
 ```bash
-hermes plugins disable hermes-superpowers-workflow
-hermes plugins remove hermes-superpowers-workflow
+hermes skills uninstall superpowers-workflow
+hermes skills tap remove OWNER/hermes-superpowers-workflow
 ```
 
-Removing the plugin does not delete project plans, specifications, ledgers, Git branches, or Obsidian notes. Review and preserve those artifacts according to the project workflow.
+Removing the tap or an installed skill does not delete project plans, specifications, ledgers, Git branches, or Obsidian notes. Review and preserve those artifacts according to the project workflow.
 
 ## Artifact conventions
 

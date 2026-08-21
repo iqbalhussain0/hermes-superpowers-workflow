@@ -31,19 +31,6 @@ for path in sorted(skills_root.glob("*/SKILL.md")):
         if ref not in skills_root.joinpath(ref, "SKILL.md").parents and not (skills_root / ref / "SKILL.md").exists():
             errors.append(f"{path}: missing related skill {ref}")
 
-manifest = ROOT / "plugin.json"
-if not manifest.exists():
-    errors.append("missing plugin.json")
-else:
-    import json
-    try:
-        value = json.loads(manifest.read_text(encoding="utf-8"))
-        for key in ("name", "version", "description"):
-            if not value.get(key):
-                errors.append(f"plugin.json: missing {key}")
-    except Exception as exc:
-        errors.append(f"plugin.json: invalid JSON: {exc}")
-
 if errors:
     for error in errors:
         print(f"ERROR {error}")
