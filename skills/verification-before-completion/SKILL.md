@@ -41,7 +41,7 @@ This is an evidence requirement, not a demand for a particular ceremony. The use
 
 ## Rules
 
-- Previous output is context, not fresh proof.
+- Older output provides background; it is not fresh proof.
 - A changed file is not proof that the change works.
 - A worker's report is not proof that its artifact exists.
 - A passing test is not proof that deployment or external behavior works.

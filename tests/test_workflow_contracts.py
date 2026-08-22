@@ -27,15 +27,13 @@ def test_router_has_risk_sensitive_profiles():
     assert (SKILLS / "superpowers-workflow" / "references" / "risk-classification.md").is_file()
 
 
-def test_subagent_loop_is_bounded_and_integrated():
-    body = text("subagent-driven-development")
-    assert "Prefer inline execution" in body
-    assert "Worker brief" in body
-    assert "Inspect the worker's claimed files and diff independently" in body
-    assert "Integrated review" in body
-    assert "reconcile the ledger against Git, files, and live runtime state" in body
+def test_subagent_execution_uses_official_skill_and_package_ledger():
+    body = text("superpowers-workflow")
+    assert "official Hermes `subagent-driven-development` skill" in body
+    assert "official/software-development/subagent-driven-development" in body
     assert "references/execution-ledger.md" in body
-    assert (SKILLS / "subagent-driven-development" / "references" / "execution-ledger.md").is_file()
+    assert (SKILLS / "superpowers-workflow" / "references" / "execution-ledger.md").is_file()
+    assert not (SKILLS / "subagent-driven-development").exists()
 
 
 def test_verification_refuses_unsupported_completion_claims():

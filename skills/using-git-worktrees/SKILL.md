@@ -8,7 +8,7 @@ platforms: [linux, macos, windows]
 metadata:
   hermes:
     tags: [git, worktree, isolation, branches]
-    related_skills: [finishing-development-branch, subagent-driven-development]
+    related_skills: [finishing-development-branch]
 ---
 
 # Using Git Worktrees

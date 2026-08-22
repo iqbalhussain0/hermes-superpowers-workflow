@@ -7,10 +7,11 @@ Hermes-native workflow discipline adapted from Superpowers without installing th
 - `superpowers-workflow` — routes work by risk and complexity.
 - `brainstorming-and-design` — requirements, alternatives, design, and approval.
 - `using-git-worktrees` — repository isolation when appropriate.
-- `subagent-driven-development` — bounded workers, review, integration, and ledger recovery.
 - `receiving-code-review` — evidence-based review feedback handling.
 - `verification-before-completion` — claim-to-evidence completion gate.
 - `finishing-development-branch` — explicit merge, PR, retain, or discard disposition.
+
+`subagent-driven-development` is not redistributed here. Current Hermes releases ship an official skill with that name under `software-development/`; installing a community copy under the same name resolves ambiguously in the skills hub. Use the bundled official skill as the execution engine.
 
 The package preserves Hermes' higher-priority safety, authorization, credential, operational, and recovery rules. It makes strong recommendations, but explicit current user directions override ordinary workflow ceremony.
 
@@ -23,7 +24,17 @@ hermes skills tap add OWNER/hermes-superpowers-workflow
 hermes skills install OWNER/hermes-superpowers-workflow/skills/superpowers-workflow
 ```
 
-Install the other workflow skills from the same tap when needed. Review the repository before installation; installed skills have the same trusted instruction posture as other Hermes skills.
+Install the other workflow skills from the same tap when needed:
+
+```bash
+hermes skills install OWNER/hermes-superpowers-workflow/skills/brainstorming-and-design --yes
+hermes skills install OWNER/hermes-superpowers-workflow/skills/using-git-worktrees --yes
+hermes skills install OWNER/hermes-superpowers-workflow/skills/receiving-code-review --yes
+hermes skills install OWNER/hermes-superpowers-workflow/skills/verification-before-completion --yes
+hermes skills install OWNER/hermes-superpowers-workflow/skills/finishing-development-branch --yes
+```
+
+Do not install `subagent-driven-development` from this tap on a current Hermes release; the official bundled skill of the same name wins identifier resolution. Review the repository before installation; installed skills have the same trusted instruction posture as other Hermes skills.
 
 ## Local development
 

@@ -8,7 +8,7 @@ platforms: [linux, macos, windows]
 metadata:
   hermes:
     tags: [workflow, planning, delegation, verification, superpowers]
-    related_skills: [subagent-driven-development]
+    related_skills: [brainstorming-and-design, verification-before-completion]
 ---
 
 # Superpowers Workflow for Hermes
@@ -72,8 +72,8 @@ Use for new subsystems, public interfaces, major refactors, or several independe
 - Explore alternatives.
 - Present and record the design when useful.
 - Create a detailed plan unless the user explicitly chooses a shorter path.
-- Recommend a worktree and ledger.
-- Use `subagent-driven-development` for independent tasks when appropriate.
+- Recommend a worktree and ledger (see [execution ledger specification](references/execution-ledger.md)).
+- Use the official Hermes `subagent-driven-development` skill (install with `hermes skills install official/software-development/subagent-driven-development`) for independent tasks when appropriate.
 - Perform per-task and final integrated review.
 - Finish with fresh verification and branch handling.
 
@@ -107,7 +107,7 @@ Load and use the narrowest applicable Hermes skills:
 - `test-driven-development` for behavioral code when applicable
 - `systematic-debugging` before fixing an unexplained defect
 - `model-routed-delegation` when using different workers or models
-- `subagent-driven-development` for independent plan tasks
+- the official `subagent-driven-development` skill for independent plan tasks
 - `requesting-code-review` for code-quality and security review
 - Security, privileged-operation, deployment, remote-access, or domain skills for those tasks
 

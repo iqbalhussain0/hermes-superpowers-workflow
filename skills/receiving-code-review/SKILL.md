@@ -8,7 +8,7 @@ platforms: [linux, macos, windows]
 metadata:
   hermes:
     tags: [code-review, feedback, verification, fixes]
-    related_skills: [verification-before-completion, subagent-driven-development]
+    related_skills: [verification-before-completion]
 ---
 
 # Receiving Code Review
