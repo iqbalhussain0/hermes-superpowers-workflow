@@ -51,3 +51,5 @@ This is an evidence requirement, not a demand for a particular ceremony. The use
 ## Completion criteria
 
 A completion report includes the evidence used, its scope, and any remaining gaps. If a check cannot run, say exactly why and use `BLOCKED` or `UNVERIFIED` rather than substituting confidence.
+
+Use the [verification report template](templates/verification-report.md) when reporting on a change or deployment with multiple claims.

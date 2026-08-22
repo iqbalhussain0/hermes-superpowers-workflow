@@ -54,6 +54,8 @@ Do not create a formal specification or plan document unless the scope warrants 
 5. Self-review for contradictions, missing requirements, undefined interfaces, and scope gaps.
 6. Convert the approved design into `.hermes/plans/` unless the user explicitly chooses another execution path.
 
+Use the [design spec template](templates/design-spec.md) for written specifications and the [implementation plan template](templates/implementation-plan.md) for detailed plans.
+
 ## Approval separation
 
 Design approval, implementation direction, operational authorization, and integration authorization are separate concepts. Approval of a design never silently authorizes deployment, publication, credential changes, or unrelated cleanup.

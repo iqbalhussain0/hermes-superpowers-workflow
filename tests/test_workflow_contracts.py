@@ -51,6 +51,19 @@ def test_branch_finishing_separates_integration_authorization():
         assert choice in body
 
 
+def test_templates_exist_and_are_linked():
+    expected = {
+        "brainstorming-and-design": ["templates/design-spec.md", "templates/implementation-plan.md"],
+        "receiving-code-review": ["templates/review-disposition.md"],
+        "verification-before-completion": ["templates/verification-report.md"],
+    }
+    for skill, templates in expected.items():
+        body = text(skill)
+        for template in templates:
+            assert template in body
+            assert (SKILLS / skill / template).is_file()
+
+
 def test_repository_documents_supported_tap_installation():
     body = (ROOT / "README.md").read_text(encoding="utf-8")
     assert "hermes skills tap add OWNER/hermes-superpowers-workflow" in body

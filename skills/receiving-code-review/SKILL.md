@@ -28,6 +28,8 @@ Handle review feedback as technical input, not as an automatic command and not a
 7. Request or perform a focused re-review of changed areas.
 8. Record the finding, evidence, disposition, and any user override.
 
+Use the [review disposition template](templates/review-disposition.md) when the review has enough findings to warrant a record.
+
 Do not dismiss a finding because the implementation is already complete. Do not implement unrelated cleanup during a review fix.
 
 ## Security and authorization
