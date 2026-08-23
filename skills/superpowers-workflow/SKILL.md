@@ -1,6 +1,6 @@
 ---
 name: superpowers-workflow
-description: Route mixed-risk work from design through integration.
+description: Use only when one task crosses two risk or lifecycle boundaries.
 version: 0.2.0
 author: Hermes Agent
 license: MIT
@@ -46,21 +46,22 @@ Apply the *union* of the controls both axes demand. Never let one axis replace t
 
 ## Conditional routing
 
-Load a focused skill only when its trigger is true for this task. These rules are exclusive:
+These are independent gates: each fires only when its trigger is true, and several may fire on one task. An explicit user skip of a ceremony means the skill is not loaded. When an official skill is already loaded, follow it — do not add a second procedure that fights its rules; this package only narrows *when* each skill is loaded.
 
 - **plan:** load only when the user asked for a plan instead of execution. The official `plan` skill forbids execution in the same turn. For an already-authorized implementation, use the package's implementation-plan template directly and do not load `plan`.
 - **test-driven-development:** load for new behavioral production code unless the user explicitly skipped it.
 - **systematic-debugging:** load only for an unexplained defect. For a read-only investigation, use its evidence-gathering discipline but do not create tests, harnesses, or instrumentation without execution direction covering that mutation.
 - **spike:** route feasibility experiments to the official `spike` skill. This package adds only one constraint: a mutating or externally visible probe needs operational authorization.
 - **subagent-driven-development (official):** load only when the user chose delegated multi-task execution. Apply the overlay below whenever it is loaded.
-- **requesting-code-review:** load only when the user asked for a pre-commit review pass. Never run its commit step unless the user explicitly asked to commit, and never run `git add -A`. All evidence commands must use `set -o pipefail` and retain full output; tailed pipeline output is not evidence.
+- **requesting-code-review:** load only when the user asked for a pre-commit review pass. Never run its commit step unless the user explicitly asked to commit, and never run `git add -A`. All evidence commands must use `set -o pipefail` and retain full output; tailed pipeline output is not evidence. Never start it from `finishing-development-branch` or `receiving-code-review`.
+- **milestone-backed-execution:** do not load when this router governs completion. If it is already loaded, map its ACTIVE/BLOCKED/STALLED onto this package's states and do not maintain a second completion vocabulary.
 - **receiving-code-review:** load when responding to actual review findings from a human or another agent.
 - **model-routed-delegation:** load only when different models or runtimes are assigned to different slices of the work.
 - **Domain skills** (security, deployment, remote access, Proxmox, etc.): load for their domains as usual.
 
-### Official subagent-driven-development overlay
+### Official subagent-driven-development constraints
 
-The official skill predates some current Hermes constraints. Whenever it is used:
+The official skill predates some current Hermes constraints. These are dispatch-side corrections, not an attempt to override its text:
 
 - Workers cannot ask the user questions. The worker brief must contain every decision; the coordinator resolves ambiguity before dispatch.
 - `delegate_task` accepts `goal`, `context`, and optionally `role`/`tasks` — there is no `toolsets` parameter.
@@ -73,8 +74,10 @@ Approval labels in this package map to real controls:
 
 - **Intent approval** and **execution direction:** the user's explicit statement in authenticated chat.
 - **Git mutations** (commit, push, merge, publish, discard): explicit current user direction for that action. A plan, spec checkbox, or earlier general approval is not commit or push authority.
-- **Operational authorization** (privileged, network, credential, security-boundary, destructive, externally visible): the host's privileged-operation grant path — scoped wrappers, authenticated-chat approval, or the installed approval bridge — never a casual "yes" and never a ledger entry by itself.
+- **Operational authorization** (privileged, network, credential, security-boundary, destructive, externally visible): the host's privileged-operation grant path only — a scoped wrapper, a TOTP/lease, or a named installed approval bridge. If the host has no grant path for the action, fail closed and hand the exact command to the user. A chat "yes" is intent or ordinary execution direction; it is never operational authorization by itself.
 - **Integration authorization:** explicit direction to merge, push, publish, deploy, or discard, given at integration time.
+
+Risk acceptance comes only from the profile owner or configured approval principal — not from whoever happens to send a message in a shared chat.
 
 Authorizations for privileged or destructive actions are recorded in the ledger with source, exact action and target, issued time, expiry, one-shot versus reusable, and consumed/revoked state. A ledger entry documents authorization; it is not an authorization token. After any interruption or resume, revalidate that the authorization still matches the current action and state before using it.
 

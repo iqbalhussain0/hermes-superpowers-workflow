@@ -45,13 +45,14 @@ If `GIT_DIR` differs from `GIT_COMMON`, this checkout is already a linked worktr
 Only when isolation was selected (by recommendation plus user direction, or by explicit request):
 
 1. Choose a location — a user-specified path, an existing `.worktrees/` or `worktrees/` directory, or a path outside the repository.
-2. Verify the exact selected parent path is ignored:
+2. If the parent is outside the repository, no ignore check applies. If it is inside, create it first, then verify the exact selected parent path is ignored:
 
 ```bash
+mkdir -p "$WORKTREE_PARENT"
 git check-ignore -q -- "$WORKTREE_PARENT"
 ```
 
-If it is not ignored, either select an external location or add that exact path to `.gitignore` within the authorized scope and verify again.
+If it is not ignored, select an external location, or — only with explicit current-user direction — add that exact repo-relative path to `.gitignore` and verify again.
 
 3. Create with an explicit start point:
 
@@ -61,10 +62,6 @@ git worktree add -b "$BRANCH" "$WORKTREE_PATH" "$BASE_COMMIT"
 
 4. Follow repository setup instructions before installing dependencies; do not mutate lockfiles outside scope.
 5. Run a baseline test or record that none exists.
-
-## Platform note
-
-Commands above are POSIX shell. On Windows, use equivalent PowerShell/git commands or WSL; do not run this shell syntax under cmd.exe.
 
 ## Completion criteria
 

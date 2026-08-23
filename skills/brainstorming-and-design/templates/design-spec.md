@@ -3,7 +3,8 @@
 - **Date:** YYYY-MM-DD
 - **Author:** <coordinator>
 - **Status:** draft / under review / approved / superseded
-- **Workflow profile:** spike / bounded / architectural / operations
+- **Work shape:** inquiry / empirical spike / bounded code / architectural code
+- **Operational risk:** none / reversible configuration / deployment / privileged / security boundary / destructive
 
 ## Problem
 

@@ -73,7 +73,8 @@ python3 tests/run_scenarios.py
 
 ## Artifact conventions
 
-- Plans: `.hermes/plans/`
+- Plan-only turns (official `plan` skill): `.hermes/plans/`
+- Execution plans (this package): `.hermes/workflows/<plan-id>/plan.md`
 - Specifications: `docs/specs/`
 - Execution ledgers: `.hermes/workflows/<plan-id>/progress.md`
 - Operational records: wherever the project already keeps runbooks. Do not create an Obsidian note unless the project already uses Obsidian.

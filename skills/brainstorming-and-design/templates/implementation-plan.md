@@ -1,7 +1,7 @@
 # Implementation Plan: <title>
 
 - **Spec:** <path to design spec, or "inline — bounded change">
-- **Plan ID:** <slug used for .hermes/workflows/<plan-id>/progress.md>
+- **Plan ID:** <slug; this plan lives at .hermes/workflows/<plan-id>/plan.md>
 - **Repository root:**
 - **Base branch / starting commit:**
 - **Worktree:** <path, or "in place per user direction">

@@ -12,7 +12,8 @@ def test_router_has_narrow_trigger_and_counter_triggers():
     import yaml
     body = text("superpowers-workflow")
     desc = yaml.safe_load(body.split("---", 2)[1])["description"]
-    assert len(desc) <= 57 or "Superpowers" in desc or "Route" in desc
+    assert desc.startswith("Use only when")
+    assert "two risk or lifecycle boundaries" in desc
     assert "Do not load for" in body
     assert "single-domain task" in body
 
@@ -26,6 +27,7 @@ def test_router_preserves_authority_and_override_policy():
 
 def test_router_routing_is_conditional_and_exclusive():
     body = text("superpowers-workflow")
+    assert "independent gates" in body
     assert "plan-only" in body
     assert "For an already-authorized implementation" in body
     assert "unless the user explicitly skipped it" in body
@@ -35,6 +37,7 @@ def test_router_routing_is_conditional_and_exclusive():
     assert "only when the user asked for a pre-commit review pass" in body
     assert "git add -A" in body
     assert "set -o pipefail" in body
+    assert "milestone-backed-execution" in body
 
 
 def test_sdd_compatibility_overlay():
@@ -75,10 +78,13 @@ def test_worktree_predicates_are_correct():
     body = text("using-git-worktrees")
     assert "no native worktree mechanism" not in body
     assert 'git check-ignore -q -- "$WORKTREE_PARENT"' in body
+    assert "mkdir -p" in body
+    assert "outside the repository" in body
     assert '"$BASE_COMMIT"' in body
     assert "hermes -w" in body
     assert "before any mutation" in body
     assert "DETACHED" in body
+    assert "cmd.exe" not in body
 
 
 def test_verification_wording_is_precise():

@@ -25,7 +25,7 @@ Run whatever checks are still missing before presenting dispositions:
 2. Inspect the complete diff (`git diff`, not `--stat` alone) and `git status`.
 3. Secret scan: no credentials, tokens, private endpoints, or sensitive output in the change or its workflow artifacts.
 4. Confirm base branch and commit provenance.
-5. Confirm integrated review state and unresolved findings.
+5. Inspect the review evidence that already exists. If review was skipped or never selected, mark review UNVERIFIED — do not start a new review pipeline from here.
 
 If verification already exists or the user explicitly skipped remaining checks, present dispositions immediately and mark skipped claims UNVERIFIED — do not re-run gates the user waived.
 

@@ -23,6 +23,10 @@ Do not load for:
 - Feasibility experiments (route those to the official `spike` skill).
 - Read-only research questions (answer them; no design ceremony).
 
+## Plan-only requests
+
+If the user asked for a plan instead of execution, do not use this skill's artifacts: load the official `plan` skill, write the plan to `.hermes/plans/`, and stop — that skill forbids same-turn execution. Do not write `docs/specs/` on a plan-only turn.
+
 ## Bounded change
 
 For a limited modification to an existing flow:
@@ -43,7 +47,7 @@ For new subsystems, public interfaces, major refactors, or multiple interacting 
 3. Present the design in reviewable sections.
 4. Record the approved design in `docs/specs/YYYY-MM-DD--<slug>.md` using the [design spec template](templates/design-spec.md).
 5. Self-review for contradictions, missing requirements, undefined interfaces, and scope gaps.
-6. If the user wants execution to continue in this turn, write the [implementation plan](templates/implementation-plan.md) and proceed. If the user wants only a plan, use the official `plan` skill and stop — that skill forbids same-turn execution.
+6. If the user wants execution to continue in this turn, write the [implementation plan](templates/implementation-plan.md) to `.hermes/workflows/<plan-id>/plan.md` and proceed. If the user wants only a plan, see Plan-only requests above.
 
 ## Approval separation
 
