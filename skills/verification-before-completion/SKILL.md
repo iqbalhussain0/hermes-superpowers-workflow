@@ -1,43 +1,47 @@
 ---
 name: verification-before-completion
-description: Use before claiming work is complete, fixed, or verified.
-version: 0.1.0
+description: Use for final evidence reports after complex work.
+version: 0.2.0
 author: Hermes Agent
 license: MIT
-platforms: [linux, macos, windows]
+platforms: [linux, macos]
 metadata:
   hermes:
     tags: [verification, evidence, completion, testing]
-    related_skills: [superpowers-workflow, receiving-code-review]
+    related_skills: [receiving-code-review]
 ---
 
 # Verification Before Completion
+
+## Purpose
+
+Produce an evidence-backed final report for complex, multi-claim work — deployments, recovery events, security-boundary changes, multi-task implementations. Do not load for every ordinary "done"; a single focused check that already ran fresh is its own evidence.
 
 ## Iron law
 
 Do not make a completion, correctness, deployment, or success claim without fresh evidence appropriate to that claim.
 
-This is an evidence requirement, not a demand for a particular ceremony. The user may explicitly choose not to run an optional check; report the result as unverified rather than claiming success.
-
 ## Gate
 
 1. Identify the exact claim.
 2. Identify the command, observation, or user-visible result that proves it.
-3. Run the freshest practical check.
-4. Read the complete output and exit status.
+3. Run the freshest practical check with `set -o pipefail` where pipes are used, and retain the full output.
+4. Read the complete output and the real exit status — the producer's status, not the last command in a pipeline.
 5. Compare the result against the actual requirement.
-6. Report passed, failed, skipped, blocked, and unverified conditions separately.
+6. Report PASS / FAIL / BLOCKED / UNVERIFIED per claim.
 
-## Claim-to-evidence examples
+Never accept tailed pipeline output as completion evidence. The user may explicitly skip a check; report it as UNVERIFIED rather than claiming success.
 
-- Tests pass: fresh test output and exit status.
-- Build works: fresh build output and exit status.
+## Claim-to-evidence
+
+- Tests pass: full fresh test output and the test command's exit status.
+- Build works: full fresh build output and exit status.
 - Bug fixed: original symptom or regression test passes.
-- Agent completed: inspect the diff and independently verify the result.
-- Deployment works: deployed state, service health, and functional probe.
-- Firewall is safe: effective rules plus an external-boundary probe.
-- Recovery works: exercised recovery or explicitly recorded why it was not exercised.
-- Requirements met: checklist mapped to the approved requirements.
+- Agent completed: the claimed artifact exists, its diff was inspected, and its checks were re-run independently.
+- Deployment works: deployed state, service health, and a functional probe.
+- Firewall exposure closed: effective rules from the authoritative source, plus a probe from an external vantage point, plus an explicit list of what was not probed. Never call a firewall "safe"; state exactly what was verified and from where.
+- Recovery works: requires an exercised recovery test. Reviewing a recovery document or config proves only "recovery procedure reviewed." If recovery was not exercised, the status is UNVERIFIED.
+- Requirements met: checklist mapped to the approved requirements, one evidence line each.
 
 ## Rules
 
@@ -50,6 +54,4 @@ This is an evidence requirement, not a demand for a particular ceremony. The use
 
 ## Completion criteria
 
-A completion report includes the evidence used, its scope, and any remaining gaps. If a check cannot run, say exactly why and use `BLOCKED` or `UNVERIFIED` rather than substituting confidence.
-
-Use the [verification report template](templates/verification-report.md) when reporting on a change or deployment with multiple claims.
+Use the [verification report template](templates/verification-report.md) when the work has multiple claims. The report includes the evidence used, its scope, and any remaining gaps, and concludes VERIFIED / PARTIALLY VERIFIED / NOT VERIFIED with the evidence boundary stated.

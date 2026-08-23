@@ -51,6 +51,23 @@ scenarios:
     must_contain_any:
       - "Read-only"
       - "read-only"
+      - "Inquiry"
+      - "inquiry"
     must_not_contain:
       - "Architectural"
       - "Spike"
+
+  - id: plan-skill-not-hijacked
+    skills: [superpowers-workflow, plan]
+    prompt: >-
+      Fix the typo in the README heading of this project. I explicitly direct:
+      skip the formal plan, just make the edit. In one sentence, say what you do
+      first.
+    must_contain_any:
+      - "edit"
+      - "fix"
+      - "make the change"
+      - "typo"
+    must_not_contain:
+      - "planning only"
+      - ".hermes/plans/"

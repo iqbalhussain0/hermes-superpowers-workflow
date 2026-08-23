@@ -2,6 +2,8 @@
 
 Hermes-native workflow discipline adapted from Superpowers without installing the upstream plugin alongside Hermes skills. This repository is distributed as a Hermes skill tap because it contains skills and no Python plugin runtime.
 
+**Do not install the upstream Superpowers plugin (`obra/superpowers`) on the same profile as this tap.** The upstream package uses the same skill names and identifier resolution becomes ambiguous.
+
 ## Included skills
 
 - `superpowers-workflow` — routes work by risk and complexity.
@@ -11,7 +13,7 @@ Hermes-native workflow discipline adapted from Superpowers without installing th
 - `verification-before-completion` — claim-to-evidence completion gate.
 - `finishing-development-branch` — explicit merge, PR, retain, or discard disposition.
 
-`subagent-driven-development` is not redistributed here. Current Hermes releases ship an official skill with that name under `software-development/`; installing a community copy under the same name resolves ambiguously in the skills hub. Use the bundled official skill as the execution engine.
+`subagent-driven-development` is not redistributed here. Current Hermes releases ship an official optional skill with that name; install it with `hermes skills install official/software-development/subagent-driven-development`. The `superpowers-workflow` skill carries a compatibility overlay for its current Hermes limitations (workers cannot ask questions; no `toolsets` parameter; workers do not commit).
 
 The package preserves Hermes' higher-priority safety, authorization, credential, operational, and recovery rules. It makes strong recommendations, but explicit current user directions override ordinary workflow ceremony.
 
@@ -61,9 +63,18 @@ hermes skills tap remove OWNER/hermes-superpowers-workflow
 
 Removing the tap or an installed skill does not delete project plans, specifications, ledgers, Git branches, or Obsidian notes. Review and preserve those artifacts according to the project workflow.
 
+## Behavioral scenario tests
+
+`tests/run_scenarios.py` runs live fresh-session checks against the default profile (`hermes chat -q --skills ...`). These cost real model calls — run them deliberately:
+
+```bash
+python3 tests/run_scenarios.py
+```
+
 ## Artifact conventions
 
 - Plans: `.hermes/plans/`
 - Specifications: `docs/specs/`
 - Execution ledgers: `.hermes/workflows/<plan-id>/progress.md`
-- Operational records: the project's runbook or Obsidian operational note
+- Operational records: wherever the project already keeps runbooks. Do not create an Obsidian note unless the project already uses Obsidian.
+- Workflow artifacts never contain secrets, credential values, or unredacted sensitive output.

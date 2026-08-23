@@ -1,10 +1,10 @@
 ---
 name: using-git-worktrees
-description: Use when repository work benefits from branch isolation.
-version: 0.1.0
+description: Use when repository work needs an extra isolated checkout.
+version: 0.2.0
 author: Hermes Agent
 license: MIT
-platforms: [linux, macos, windows]
+platforms: [linux, macos]
 metadata:
   hermes:
     tags: [git, worktree, isolation, branches]
@@ -15,47 +15,62 @@ metadata:
 
 ## Purpose
 
-Protect the current branch from implementation changes and parallel edits. Worktrees are the default recommendation for multi-file or delegated repository work, not an unconditional requirement. Follow an explicit user choice to work in place unless a higher-priority safety or authorization constraint prevents it.
+Create or verify an isolated checkout for in-session work that needs its own working tree — parallel subagent edits, long-running changes, or work that must not touch the current checkout.
 
-## Detect isolation first
+Session-level isolation is already covered by spawning Hermes with `hermes -w`, which creates its own worktree and `hermes/<hash>` branch. This skill covers *additional* checkouts inside a session, not the session default.
 
-Run:
-
-```bash
-GIT_DIR=$(cd "$(git rev-parse --git-dir)" 2>/dev/null && pwd -P)
-GIT_COMMON=$(cd "$(git rev-parse --git-common-dir)" 2>/dev/null && pwd -P)
-git branch --show-current
-git rev-parse --show-superproject-working-tree 2>/dev/null
-```
-
-If `GIT_DIR` differs from `GIT_COMMON` and the path is not a submodule, report the existing worktree and do not create another one.
-
-## Create isolation
-
-1. Check for a user-specified location.
-2. Prefer an existing `.worktrees/` or `worktrees/` directory.
-3. Verify the chosen directory is ignored:
+## Capture provenance before any mutation
 
 ```bash
-git check-ignore -q .worktrees || git check-ignore -q worktrees
+REPO_ROOT=$(git rev-parse --show-toplevel)
+BASE_BRANCH=$(git branch --show-current || echo DETACHED)
+BASE_COMMIT=$(git rev-parse HEAD)
+git worktree list --porcelain
+git status --short
 ```
 
-4. If the user authorized creation and no native worktree mechanism exists:
+Record these in the plan or ledger. If HEAD is detached, the intended base branch is ambiguous, the branch name already exists, or the tree is dirty in a way the task depends on, resolve that with the user before creating anything.
+
+## Check existing isolation
 
 ```bash
-git worktree add <path> -b <branch-name>
+GIT_DIR=$(cd "$(git rev-parse --git-dir)" && pwd -P)
+GIT_COMMON=$(cd "$(git rev-parse --git-common-dir)" && pwd -P)
 ```
 
-5. Record repository root, base branch, starting commit, worktree path, and branch.
-6. Follow repository instructions before installing dependencies.
-7. Run a baseline test or explicitly record that no baseline exists.
+If `GIT_DIR` differs from `GIT_COMMON`, this checkout is already a linked worktree — say so and record it. That does not block creating *sibling* worktrees for parallel work; create those from the common git directory with an explicit base commit.
 
-Do not blindly run package installers or mutate lockfiles. Respect project instructions and the user's chosen scope.
+## Create an extra worktree
+
+Only when isolation was selected (by recommendation plus user direction, or by explicit request):
+
+1. Choose a location — a user-specified path, an existing `.worktrees/` or `worktrees/` directory, or a path outside the repository.
+2. Verify the exact selected parent path is ignored:
+
+```bash
+git check-ignore -q -- "$WORKTREE_PARENT"
+```
+
+If it is not ignored, either select an external location or add that exact path to `.gitignore` within the authorized scope and verify again.
+
+3. Create with an explicit start point:
+
+```bash
+git worktree add -b "$BRANCH" "$WORKTREE_PATH" "$BASE_COMMIT"
+```
+
+4. Follow repository setup instructions before installing dependencies; do not mutate lockfiles outside scope.
+5. Run a baseline test or record that none exists.
+
+## Platform note
+
+Commands above are POSIX shell. On Windows, use equivalent PowerShell/git commands or WSL; do not run this shell syntax under cmd.exe.
 
 ## Completion criteria
 
-- Isolation state was detected rather than assumed.
-- Worktree location is ignored and recorded.
-- Base commit and branch provenance are recorded.
+- Provenance was captured before mutation.
+- Existing isolation was detected, not assumed.
+- The selected parent path itself is ignored or external.
+- The worktree records base commit and branch.
 - Baseline state is known or explicitly documented.
-- Cleanup or retention remains under the user's integration decision.
+- Cleanup or retention follows the user's integration decision in `finishing-development-branch`.

@@ -1,10 +1,10 @@
 ---
 name: finishing-development-branch
-description: Use when finishing verified repository work and deciding branch disposition.
-version: 0.1.0
+description: Use when choosing merge, PR, keep, or discard for finished work.
+version: 0.2.0
 author: Hermes Agent
 license: MIT
-platforms: [linux, macos, windows]
+platforms: [linux, macos]
 metadata:
   hermes:
     tags: [git, branch, merge, pull-request, cleanup]
@@ -15,20 +15,19 @@ metadata:
 
 ## Purpose
 
-Close verified repository work without silently merging, publishing, deleting, or discarding it.
+Decide and execute the disposition of finished repository work without silently merging, committing, publishing, deleting, or discarding it.
 
 ## Final checks
 
-Before presenting branch choices:
+Run whatever checks are still missing before presenting dispositions:
 
-1. Run the applicable focused and broad tests.
-2. Inspect the complete diff and status.
-3. Confirm no secrets, credentials, temporary files, or unrelated changes are included.
-4. Confirm the base branch and commit provenance.
-5. Confirm final integrated review and unresolved findings.
-6. Record the evidence in the workflow ledger.
+1. Focused and broad tests, with `set -o pipefail` and full retained output.
+2. Inspect the complete diff (`git diff`, not `--stat` alone) and `git status`.
+3. Secret scan: no credentials, tokens, private endpoints, or sensitive output in the change or its workflow artifacts.
+4. Confirm base branch and commit provenance.
+5. Confirm integrated review state and unresolved findings.
 
-Do not claim the branch is complete from a worker report or a clean-looking diff alone.
+If verification already exists or the user explicitly skipped remaining checks, present dispositions immediately and mark skipped claims UNVERIFIED — do not re-run gates the user waived.
 
 ## Integration choices
 
@@ -39,13 +38,13 @@ Present the available disposition in plain text:
 3. Keep the branch and worktree.
 4. Discard the branch and worktree.
 
-Follow the user's explicit choice. Do not merge, push, publish, or discard without the corresponding direction or previously scoped authorization.
+Follow the user's explicit choice. **Commit, merge, push, publish, and discard are each separately authorized git mutations** — an earlier "go ahead" on implementation is not commit or push authority. Ask for the specific action if it was not already directed.
 
 ## Cleanup
 
 Only after the disposition is known:
 
-- Remove a worktree if the user selected cleanup.
+- Remove the worktree if the user selected cleanup.
 - Verify the branch and worktree are gone when deletion was requested.
 - Preserve rollback or review artifacts when required.
 - Do not delete a branch containing unmerged work without explicit authorization.
@@ -53,7 +52,7 @@ Only after the disposition is known:
 ## Completion criteria
 
 - Final requirements and verification evidence are recorded.
-- Complete diff and branch provenance were inspected.
-- Integration or retention choice is explicit.
-- Any merge, push, publication, or deletion was separately authorized.
+- The complete diff and branch provenance were inspected with the actual commands, whose results are retained.
+- The integration or retention choice is explicit.
+- Each commit, merge, push, publication, or deletion was separately authorized.
 - Cleanup matches the selected disposition.

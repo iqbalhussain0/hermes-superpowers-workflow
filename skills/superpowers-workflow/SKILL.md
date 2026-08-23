@@ -1,13 +1,13 @@
 ---
 name: superpowers-workflow
-description: Use when coordinating software or operational work across planning and verification.
-version: 0.1.0
+description: Route mixed-risk work from design through integration.
+version: 0.2.0
 author: Hermes Agent
 license: MIT
-platforms: [linux, macos, windows]
+platforms: [linux, macos]
 metadata:
   hermes:
-    tags: [workflow, planning, delegation, verification, superpowers]
+    tags: [workflow, routing, risk, verification, superpowers]
     related_skills: [brainstorming-and-design, verification-before-completion]
 ---
 
@@ -15,143 +15,90 @@ metadata:
 
 ## Purpose
 
-Coordinate Superpowers-style development discipline with Hermes execution, security, authorization, model routing, and operational boundaries. This skill routes to focused skills; it does not replace TDD, debugging, planning, review, deployment, or security skills.
+Route work that crosses lifecycle or risk boundaries — for example a design task that becomes a privileged deployment — through the right focused skills in the right order. This skill only routes; it contains no procedures of its own beyond classification and authorization binding.
+
+## When to use / when not to use
+
+Load this skill when one task crosses at least two boundaries, such as design plus deployment, code plus privileged operations, or implementation plus publication.
+
+Do not load for:
+
+- A single-domain task already governed by one focused skill (plan-only turns, TDD, debugging, review, spike, deployment).
+- Work that merely has multiple steps but one domain.
+- Simple lookups, edits, or read-only questions.
 
 ## Authority and user overrides
 
 Make a strong recommendation about workflow, ceremony, risks, and tradeoffs. An explicit current user direction overrides workflow recommendations and ordinary ceremony. Follow the user's direction unless a higher-priority system, authorization, legal, or security constraint prevents it.
 
-When the user overrides a recommendation:
+When the user overrides a recommendation: state the consequence briefly, record the deviation in the plan or ledger when one exists, follow the direction, and preserve applicable safety, authorization, credential, and evidence requirements. Do not repeatedly ask for reaffirmation.
 
-1. State the consequence briefly.
-2. Record the deviation in the plan or ledger when one exists.
-3. Follow the user's direction.
-4. Preserve applicable safety, authorization, credential, and evidence requirements.
+An explicit user skip of a ceremony means *do not load that skill* — never load it and then try to override its iron law.
 
-Do not repeatedly ask the user to reaffirm an explicit override.
+## Classify on two axes
 
-## Classify before acting
+Use the [risk classification reference](references/risk-classification.md). Every task gets both:
 
-Use the [risk classification reference](references/risk-classification.md) to record mutation, privilege, reversibility, blast radius, recovery dependence, and visibility. Choose the lightest accurate profile. Hidden complexity upgrades the profile; user direction may choose a lighter workflow when policy permits.
+1. **Work shape:** inquiry / empirical spike / bounded code / architectural code.
+2. **Operational risk:** none / reversible configuration / deployment / privileged / security boundary / destructive.
 
-### Read-only inquiry
+Apply the *union* of the controls both axes demand. Never let one axis replace the other. When uncertain, choose the lightest accurate work shape, then add controls from the highest risk dimension.
 
-Use for inspection, research, diagnosis, and reporting without mutation.
+## Conditional routing
 
-- Discover relevant skills.
-- Gather evidence.
-- Use systematic debugging when investigating a defect.
-- Do not impose design or implementation ceremony.
+Load a focused skill only when its trigger is true for this task. These rules are exclusive:
 
-### Spike
+- **plan:** load only when the user asked for a plan instead of execution. The official `plan` skill forbids execution in the same turn. For an already-authorized implementation, use the package's implementation-plan template directly and do not load `plan`.
+- **test-driven-development:** load for new behavioral production code unless the user explicitly skipped it.
+- **systematic-debugging:** load only for an unexplained defect. For a read-only investigation, use its evidence-gathering discipline but do not create tests, harnesses, or instrumentation without execution direction covering that mutation.
+- **spike:** route feasibility experiments to the official `spike` skill. This package adds only one constraint: a mutating or externally visible probe needs operational authorization.
+- **subagent-driven-development (official):** load only when the user chose delegated multi-task execution. Apply the overlay below whenever it is loaded.
+- **requesting-code-review:** load only when the user asked for a pre-commit review pass. Never run its commit step unless the user explicitly asked to commit, and never run `git add -A`. All evidence commands must use `set -o pipefail` and retain full output; tailed pipeline output is not evidence.
+- **receiving-code-review:** load when responding to actual review findings from a human or another agent.
+- **model-routed-delegation:** load only when different models or runtimes are assigned to different slices of the work.
+- **Domain skills** (security, deployment, remote access, Proxmox, etc.): load for their domains as usual.
 
-Use for feasibility questions and disposable probes.
+### Official subagent-driven-development overlay
 
-- State the question and probe.
-- Obtain approval before a mutating or externally visible probe.
-- Keep artifacts disposable and clearly labeled.
-- Report evidence and recommendation.
-- Do not promote spike code directly to production.
+The official skill predates some current Hermes constraints. Whenever it is used:
 
-### Bounded code change
+- Workers cannot ask the user questions. The worker brief must contain every decision; the coordinator resolves ambiguity before dispatch.
+- `delegate_task` accepts `goal`, `context`, and optionally `role`/`tasks` — there is no `toolsets` parameter.
+- Workers may not commit, push, or create remotes. Git mutations belong to the coordinator and need explicit user direction.
+- The coordinator independently verifies each claimed artifact and diff.
 
-Use for a limited modification to an existing flow.
+## Authorization binding
 
-- Inspect the current flow and tests.
-- Present a short design and acceptance checks.
-- Recommend TDD and isolation proportionate to risk.
-- Follow the user's chosen execution path.
-- Run focused verification and inspect the diff.
+Approval labels in this package map to real controls:
 
-A formal specification and plan are not mandatory for every bounded change.
+- **Intent approval** and **execution direction:** the user's explicit statement in authenticated chat.
+- **Git mutations** (commit, push, merge, publish, discard): explicit current user direction for that action. A plan, spec checkbox, or earlier general approval is not commit or push authority.
+- **Operational authorization** (privileged, network, credential, security-boundary, destructive, externally visible): the host's privileged-operation grant path — scoped wrappers, authenticated-chat approval, or the installed approval bridge — never a casual "yes" and never a ledger entry by itself.
+- **Integration authorization:** explicit direction to merge, push, publish, deploy, or discard, given at integration time.
 
-### Architectural or multi-task code
+Authorizations for privileged or destructive actions are recorded in the ledger with source, exact action and target, issued time, expiry, one-shot versus reusable, and consumed/revoked state. A ledger entry documents authorization; it is not an authorization token. After any interruption or resume, revalidate that the authorization still matches the current action and state before using it.
 
-Use for new subsystems, public interfaces, major refactors, or several independently testable tasks.
+## Progress state
 
-- Explore alternatives.
-- Present and record the design when useful.
-- Create a detailed plan unless the user explicitly chooses a shorter path.
-- Recommend a worktree and ledger (see [execution ledger specification](references/execution-ledger.md)).
-- Use the official Hermes `subagent-driven-development` skill (install with `hermes skills install official/software-development/subagent-driven-development`) for independent tasks when appropriate.
-- Perform per-task and final integrated review.
-- Finish with fresh verification and branch handling.
+The Hermes `todo` tool is the live task list. The [execution ledger](references/execution-ledger.md) exists only for cross-session handoff, long-running operations, and audit needs — as timestamped historical observations that must be reconciled against Git, filesystem, and runtime state before reuse.
 
-### Operations and deployment
+## Artifact data policy
 
-Classify separately by privilege, reversibility, blast radius, recovery dependence, and external visibility:
+Never store secrets, credential values, authentication codes, private keys, session tokens, or raw sensitive payloads in plans, specs, ledgers, or review records. Redact command output before recording it. Record hashes, references, redacted excerpts, and outcomes. Run a secret scan before committing or publishing workflow artifacts.
 
-- Read-only diagnosis
-- Reversible local change
-- Service restart or deployment
-- Privileged mutation
-- Network or security-boundary change
-- Destructive or irreversible action
+## Completion states
 
-Use operational preflight, staging, scoped authorization, rollback preparation, runtime verification, and recovery checks as applicable. Coding workflow ceremony does not replace operational safety.
+- **COMPLETE:** every in-scope required criterion passed with fresh evidence.
+- **PARTIALLY COMPLETE:** the authorized requester reduced scope; remaining scope is explicitly deferred.
+- **BLOCKED:** a required criterion cannot be verified or completed.
 
-## Canonical artifacts
-
-- Bounded or implementation plans: `.hermes/plans/`
-- Architectural specifications: `docs/specs/`
-- Multi-task execution ledger: `.hermes/workflows/<plan-id>/progress.md`
-- Operational records: the project's runbook or Obsidian operational note
-
-A ledger is evidence of prior coordinator state, not current truth. On resume, reconcile it against Git, files, services, and live system probes.
-
-## Required routing
-
-Load and use the narrowest applicable Hermes skills:
-
-- `plan` for detailed implementation plans
-- `test-driven-development` for behavioral code when applicable
-- `systematic-debugging` before fixing an unexplained defect
-- `model-routed-delegation` when using different workers or models
-- the official `subagent-driven-development` skill for independent plan tasks
-- `requesting-code-review` for code-quality and security review
-- Security, privileged-operation, deployment, remote-access, or domain skills for those tasks
-
-Do not duplicate a skill's body in this router. If a referenced skill is unavailable, report it and use the closest verified alternative rather than inventing its behavior.
-
-## Approval separation
-
-Keep these distinct:
-
-1. Intent approval: agreement with the design or requested change.
-2. Execution direction: instruction to implement within scope.
-3. Operational authorization: permission for a privileged or external side effect.
-4. Integration authorization: permission to merge, push, publish, deploy, or discard.
-
-An approved design does not authorize deployment. A request to implement does not authorize unrelated cleanup. An explicit user direction may combine ordinary workflow steps, but it does not silently expand scope.
-
-## Completion gate
-
-Before claiming completion:
-
-1. Identify the exact evidence required by the claim.
-2. Run the freshest practical verification.
-3. Read the complete result and exit status.
-4. Compare it with the actual requirement.
-5. Report skipped, blocked, or unverifiable requirements plainly.
-
-Never substitute a worker's report, a changed file, or a plausible explanation for evidence.
-
-## Common pitfalls
-
-- Applying an architectural workflow to a simple read-only request.
-- Treating a strong recommendation as a mandatory gate after the user overrules it.
-- Treating an explicit user direction as authorization for an unrelated side effect.
-- Using a plan or ledger as a substitute for current system state.
-- Delegating tightly coupled work to independent workers.
-- Reviewing tasks individually without a final integrated review.
-- Letting this router duplicate or contradict a domain-specific security skill.
+A blocked requirement never satisfies completion. Report UNVERIFIED for claims with no evidence gathered.
 
 ## Verification checklist
 
-- [ ] Work was classified accurately.
-- [ ] The user's explicit workflow choices were followed.
-- [ ] Higher-priority safety and authorization rules were preserved.
-- [ ] Relevant domain skills were loaded.
-- [ ] Artifacts and paths match the selected profile.
-- [ ] Required review and verification evidence is fresh.
-- [ ] Unverified or blocked requirements are reported.
+- [ ] Both classification axes recorded.
+- [ ] Only triggered focused skills were loaded.
+- [ ] User overrides honored by not loading skipped ceremonies.
+- [ ] Every git mutation and operational action matched explicit current authorization.
+- [ ] Evidence came from full-output commands with real exit status.
+- [ ] Completion state uses COMPLETE / PARTIALLY COMPLETE / BLOCKED / UNVERIFIED.

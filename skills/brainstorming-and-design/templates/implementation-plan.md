@@ -45,4 +45,8 @@ Each task must be independently verifiable to be delegatable.
 
 ## Completion definition
 
-All acceptance criteria pass with fresh evidence, or are explicitly excluded/blocked with the reason recorded in the ledger.
+- COMPLETE: every in-scope required criterion passes with fresh evidence.
+- PARTIALLY COMPLETE: the authorized requester reduced scope; remaining scope is explicitly deferred.
+- BLOCKED: a required criterion cannot be verified or completed.
+
+A blocked requirement never satisfies completion.
