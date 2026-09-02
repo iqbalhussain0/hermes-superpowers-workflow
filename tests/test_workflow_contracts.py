@@ -8,6 +8,29 @@ def text(name: str) -> str:
     return (SKILLS / name / "SKILL.md").read_text(encoding="utf-8")
 
 
+def test_reliability_skill_covers_unattended_failure_modes():
+    body = text("reliability-engineering")
+    for term in (
+        "Process success is not result success",
+        "deterministic control flow",
+        "idempotent",
+        "Monitor before invoking the agent",
+        "Persist state and checkpoints",
+        "Compact errors before context injection",
+        "L1 report-only",
+        "regression cases",
+    ):
+        assert term in body
+    assert (SKILLS / "reliability-engineering/templates/workflow-state.yaml").is_file()
+    assert (SKILLS / "reliability-engineering/templates/regression-case.json").is_file()
+
+
+def test_router_links_reliability_skill():
+    body = text("superpowers-workflow")
+    assert "reliability-engineering" in body
+    assert "scheduled, unattended, resumable" in body
+
+
 def test_router_has_narrow_trigger_and_counter_triggers():
     import yaml
     body = text("superpowers-workflow")

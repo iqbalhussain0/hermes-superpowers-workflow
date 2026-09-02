@@ -12,6 +12,7 @@ Hermes-native workflow discipline adapted from Superpowers without installing th
 - `receiving-code-review` — evidence-based review feedback handling.
 - `verification-before-completion` — claim-to-evidence completion gate.
 - `finishing-development-branch` — explicit merge, PR, retain, or discard disposition.
+- `reliability-engineering` — unattended workflow state, checkpoints, idempotency, output validation, and skill regression gates.
 
 `subagent-driven-development` is not redistributed here. Current Hermes releases ship an official optional skill with that name; install it with `hermes skills install official/software-development/subagent-driven-development`. The `superpowers-workflow` skill carries a compatibility overlay for its current Hermes limitations (workers cannot ask questions; no `toolsets` parameter; workers do not commit).
 
@@ -34,6 +35,7 @@ hermes skills install OWNER/hermes-superpowers-workflow/skills/using-git-worktre
 hermes skills install OWNER/hermes-superpowers-workflow/skills/receiving-code-review --yes
 hermes skills install OWNER/hermes-superpowers-workflow/skills/verification-before-completion --yes
 hermes skills install OWNER/hermes-superpowers-workflow/skills/finishing-development-branch --yes
+hermes skills install OWNER/hermes-superpowers-workflow/skills/reliability-engineering --yes
 ```
 
 Do not install `subagent-driven-development` from this tap on a current Hermes release; the official bundled skill of the same name wins identifier resolution. Review the repository before installation; installed skills have the same trusted instruction posture as other Hermes skills.
@@ -77,5 +79,7 @@ python3 tests/run_scenarios.py
 - Execution plans (this package): `.hermes/workflows/<plan-id>/plan.md`
 - Specifications: `docs/specs/`
 - Execution ledgers: `.hermes/workflows/<plan-id>/progress.md`
+- Stateful workflow records: `skills/reliability-engineering/templates/workflow-state.yaml` (copy into the project workflow directory)
+- Regression cases: `skills/reliability-engineering/templates/regression-case.json`
 - Operational records: wherever the project already keeps runbooks. Do not create an Obsidian note unless the project already uses Obsidian.
 - Workflow artifacts never contain secrets, credential values, or unredacted sensitive output.

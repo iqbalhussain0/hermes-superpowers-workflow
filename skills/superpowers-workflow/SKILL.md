@@ -1,14 +1,14 @@
 ---
 name: superpowers-workflow
 description: Use only when one task crosses two risk or lifecycle boundaries.
-version: 0.2.0
+version: 0.3.0
 author: Hermes Agent
 license: MIT
 platforms: [linux, macos]
 metadata:
   hermes:
     tags: [workflow, routing, risk, verification, superpowers]
-    related_skills: [brainstorming-and-design, verification-before-completion]
+    related_skills: [brainstorming-and-design, verification-before-completion, reliability-engineering]
 ---
 
 # Superpowers Workflow for Hermes
@@ -84,6 +84,8 @@ Authorizations for privileged or destructive actions are recorded in the ledger 
 ## Progress state
 
 The Hermes `todo` tool is the live task list. The [execution ledger](references/execution-ledger.md) exists only for cross-session handoff, long-running operations, and audit needs — as timestamped historical observations that must be reconciled against Git, filesystem, and runtime state before reuse.
+
+For scheduled, unattended, resumable, or externally visible work, also load `reliability-engineering`. It adds schema-backed state, checkpoints, idempotency, output-health validation, bounded recovery, and regression gates; do not duplicate those controls in this router.
 
 ## Artifact data policy
 

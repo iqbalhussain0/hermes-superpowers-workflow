@@ -1,0 +1,16 @@
+# Stateful workflow record. Replace example values; never store secrets.
+workflow: example-name
+schema_version: 1
+run_id: 2026-01-01T00:00:00Z
+status: running  # running | complete | blocked | unverified
+phase: fetch
+last_verified_step: null
+next_step: fetch-source
+input_hash: null
+attempts: {}
+artifacts: []
+approvals:
+  required: false
+  status: not_required
+last_error: null
+updated_at: 2026-01-01T00:00:00Z
